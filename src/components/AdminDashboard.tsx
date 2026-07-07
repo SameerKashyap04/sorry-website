@@ -155,6 +155,18 @@ export default function AdminDashboard() {
                 </p>
               </div>
             </div>
+
+            {/* Deep Device Analytics */}
+            {latestResponse.device_details && Object.keys(latestResponse.device_details).length > 0 && (
+              <details className="mt-4 bg-rose-50 rounded p-2 text-xs border border-rose-100">
+                <summary className="cursor-pointer text-rose-700 font-semibold mb-2 outline-none">
+                  🔍 View Deep Device Analytics
+                </summary>
+                <pre className="bg-white p-3 rounded overflow-x-auto text-rose-900 border border-rose-100">
+                  {JSON.stringify(latestResponse.device_details, null, 2)}
+                </pre>
+              </details>
+            )}
           </motion.div>
 
           {/* Forgiveness Card */}

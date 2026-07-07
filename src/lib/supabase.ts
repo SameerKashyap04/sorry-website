@@ -17,6 +17,7 @@ export interface VisitResponse {
   response: string;
   device_info: string;
   location: string;
+  device_details: any;
   letter_opened: boolean;
   slideshow_opened: boolean;
   no_attempts: number;
@@ -28,14 +29,39 @@ export async function recordVisit(): Promise<string | null> {
 
   try {
     let locationStr = "Unknown Location";
+    let fullLocationData = {};
     try {
       const res = await fetch("https://ipwho.is/");
       const geo = await res.json();
       if (geo.success) {
         locationStr = `${geo.city}, ${geo.region}, ${geo.country}`;
+        fullLocationData = geo;
       }
     } catch (e) {
       console.error("Failed to fetch location", e);
+    }
+
+    let deviceDetails = {};
+    if (typeof window !== "undefined") {
+      deviceDetails = {
+        userAgent: navigator.userAgent,
+        platform: navigator.platform,
+        language: navigator.language,
+        screenResolution: `${window.screen.width}x${window.screen.height}`,
+        windowSize: `${window.innerWidth}x${window.innerHeight}`,
+        colorDepth: window.screen.colorDepth,
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        hardwareConcurrency: navigator.hardwareConcurrency || "Unknown",
+        // @ts-ignore
+        deviceMemory: navigator.deviceMemory || "Unknown",
+        // @ts-ignore
+        connectionType: navigator.connection?.effectiveType || "Unknown",
+        maxTouchPoints: navigator.maxTouchPoints || 0,
+        isTouchDevice: 'ontouchstart' in window || navigator.maxTouchPoints > 0,
+        cookieEnabled: navigator.cookieEnabled,
+        vendor: navigator.vendor,
+        ipData: fullLocationData
+      };
     }
 
     const { data, error } = await supabase
@@ -48,6 +74,7 @@ export async function recordVisit(): Promise<string | null> {
         response: "",
         device_info: typeof window !== "undefined" ? navigator.userAgent : "Unknown Device",
         location: locationStr,
+        device_details: deviceDetails,
         letter_opened: false,
         slideshow_opened: false,
         no_attempts: 0,
