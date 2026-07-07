@@ -1,0 +1,419 @@
+@import "tailwindcss";
+
+/* ========================================
+   Global Styles — Bold Pink Theme
+   ======================================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: 'Comic Sans MS', 'Comic Sans', 'Chalkboard SE', 'Segoe UI', cursive;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #ff69b4, #ff1493, #ff69b4, #e73c7e);
+  background-size: 400% 400%;
+  animation: gradientShift 8s ease infinite;
+  position: relative;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ========================================
+   Background Photo Montage
+   ======================================== */
+
+.bg-photo {
+  position: fixed;
+  border-radius: 12px;
+  opacity: 0.30;
+  pointer-events: none;
+  z-index: 0;
+  border: 3px solid rgba(255, 255, 255, 0.45);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+  object-fit: cover;
+  animation: floatPhoto 20s ease-in-out infinite;
+}
+
+@keyframes floatPhoto {
+  0%, 100% { transform: translateY(0) rotate(var(--rotation, 0deg)); }
+  25% { transform: translateY(-15px) rotate(calc(var(--rotation, 0deg) + 2deg)); }
+  50% { transform: translateY(10px) rotate(calc(var(--rotation, 0deg) - 1deg)); }
+  75% { transform: translateY(-8px) rotate(calc(var(--rotation, 0deg) + 1deg)); }
+}
+
+/* ========================================
+   Main Container — Large, Prominent
+   ======================================== */
+
+.main-card {
+  text-align: center;
+  padding: 40px 30px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 35px;
+  box-shadow: 0 25px 70px rgba(255, 105, 180, 0.5);
+  max-width: 700px;
+  width: 92%;
+  border: 3px solid rgba(255, 105, 180, 0.3);
+  position: relative;
+  z-index: 10;
+}
+
+@media (min-width: 640px) {
+  .main-card {
+    padding: 50px 50px;
+  }
+}
+
+/* ========================================
+   Custom Scrollbar
+   ======================================== */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 105, 180, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #ff69b4, #ff1493);
+  border-radius: 3px;
+}
+
+/* ========================================
+   Envelope Animation
+   ======================================== */
+
+.envelope {
+  position: relative;
+  width: 300px;
+  height: 200px;
+  margin: 0 auto;
+  cursor: pointer;
+}
+
+@media (min-width: 640px) {
+  .envelope {
+    width: 380px;
+    height: 240px;
+  }
+}
+
+.envelope-body {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 70%;
+  background: linear-gradient(135deg, #ff69b4, #ff1493);
+  border-radius: 0 0 16px 16px;
+  box-shadow: 0 4px 25px rgba(255, 20, 147, 0.4);
+  z-index: 2;
+}
+
+.envelope-flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60%;
+  background: linear-gradient(180deg, #e73c7e, #ff69b4);
+  clip-path: polygon(0 0, 50% 100%, 100% 0);
+  transform-origin: top center;
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 3;
+}
+
+.envelope-flap.open {
+  transform: rotateX(180deg);
+  z-index: 1;
+}
+
+.envelope-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60%;
+  background: linear-gradient(180deg, #ffc0cb, #ffb6c1);
+  clip-path: polygon(0 0, 50% 100%, 100% 0);
+  z-index: 1;
+}
+
+.letter-paper {
+  position: absolute;
+  bottom: 10%;
+  left: 10%;
+  width: 80%;
+  height: 85%;
+  background: linear-gradient(135deg, #fffbeb, #fef3c7, #fff);
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.3s;
+}
+
+.letter-paper.slide-up {
+  transform: translateY(-80%);
+}
+
+.envelope-heart {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2rem;
+  z-index: 4;
+  animation: pulseHeart 1.2s ease-in-out infinite;
+}
+
+@keyframes pulseHeart {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  15% { transform: translate(-50%, -50%) scale(1.25); }
+  30% { transform: translate(-50%, -50%) scale(1); }
+  45% { transform: translate(-50%, -50%) scale(1.2); }
+  60% { transform: translate(-50%, -50%) scale(1); }
+}
+
+/* ========================================
+   Heart Cursor Trail
+   ======================================== */
+
+.heart-trail {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  font-size: 16px;
+  animation: heartTrailFade 1s ease-out forwards;
+}
+
+@keyframes heartTrailFade {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-50px) scale(0.3) rotate(30deg);
+  }
+}
+
+/* ========================================
+   Big Gradient Buttons
+   ======================================== */
+
+.btn-primary {
+  font-family: 'Comic Sans MS', 'Comic Sans', 'Chalkboard SE', cursive;
+  background: linear-gradient(135deg, #ff69b4, #ff1493);
+  color: white;
+  font-weight: bold;
+  padding: 18px 44px;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  font-size: 1.3rem;
+  box-shadow: 0 8px 30px rgba(255, 20, 147, 0.45);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary:hover {
+  transform: translateY(-5px) scale(1.06);
+  box-shadow: 0 15px 45px rgba(255, 20, 147, 0.55);
+}
+
+.btn-primary:active {
+  transform: translateY(-2px) scale(1.02);
+}
+
+.btn-secondary {
+  font-family: 'Comic Sans MS', 'Comic Sans', 'Chalkboard SE', cursive;
+  background: linear-gradient(135deg, #ffb6c1, #ff69b4);
+  color: #fff;
+  font-weight: bold;
+  padding: 18px 44px;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  font-size: 1.3rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  transition: all 0.15s ease-out;
+}
+
+.btn-secondary:hover {
+  transform: scale(1.05);
+}
+
+/* ========================================
+   Section Container
+   ======================================== */
+
+.section-container {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  position: relative;
+}
+
+/* ========================================
+   Letter Content Typography
+   ======================================== */
+
+.letter-content {
+  font-family: Georgia, 'Times New Roman', 'Palatino Linotype', serif;
+  font-size: 1.15rem;
+  line-height: 1.9;
+  color: #333;
+  letter-spacing: 0.2px;
+}
+
+@media (min-width: 640px) {
+  .letter-content {
+    font-size: 1.3rem;
+    line-height: 2;
+  }
+}
+
+/* ========================================
+   Floating BG Hearts
+   ======================================== */
+
+.bg-heart {
+  position: fixed;
+  font-size: 2em;
+  opacity: 0.15;
+  animation: floatAround 15s ease-in-out infinite;
+  pointer-events: none;
+  color: #fff;
+  z-index: 0;
+}
+
+@keyframes floatAround {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(100px, -100px) rotate(90deg); }
+  50% { transform: translate(200px, 50px) rotate(180deg); }
+  75% { transform: translate(-50px, -50px) rotate(270deg); }
+}
+
+/* ========================================
+   Text Styles
+   ======================================== */
+
+.heading-text {
+  font-size: 2.4rem;
+  color: #e73c7e;
+  font-weight: bold;
+  text-shadow: 3px 3px 6px rgba(255, 105, 180, 0.3);
+  line-height: 1.5;
+}
+
+@media (min-width: 640px) {
+  .heading-text {
+    font-size: 3rem;
+  }
+}
+
+.subtext {
+  font-size: 1.2rem;
+  color: #e73c7e;
+  font-weight: bold;
+}
+
+/* ========================================
+   Shake Animation
+   ======================================== */
+
+.shake {
+  animation: shake 0.5s;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px) rotate(-5deg); }
+  75% { transform: translateX(10px) rotate(5deg); }
+}
+
+/* ========================================
+   GIF Image Style
+   ======================================== */
+
+.gif-image {
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(255, 105, 180, 0.3);
+}
+
+/* ========================================
+   Bounce
+   ======================================== */
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+/* ========================================
+   Celebration
+   ======================================== */
+
+.celebration-bg {
+  background: linear-gradient(-45deg, #ff69b4, #ff1493, #ff69b4, #ffc0cb, #ff69b4, #ff1493);
+  background-size: 400% 400%;
+  animation: gradientShift 4s ease infinite;
+}
+
+/* ========================================
+   Sparkle
+   ======================================== */
+
+.sparkle {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  background: white;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: sparkleAnim 1s ease-out forwards;
+  z-index: 999;
+}
+
+@keyframes sparkleAnim {
+  0% { opacity: 1; transform: scale(0); }
+  50% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0); }
+}
+
+/* ========================================
+   Float Up Hearts
+   ======================================== */
+
+.float-heart {
+  position: fixed;
+  font-size: 2.5em;
+  animation: floatUp 4s ease-in-out;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+@keyframes floatUp {
+  0% { opacity: 1; transform: translateY(0) rotate(0deg); }
+  100% { opacity: 0; transform: translateY(-1000px) rotate(360deg); }
+}
