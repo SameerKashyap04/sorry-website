@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getResponses, type VisitResponse } from "@/lib/supabase";
 
@@ -244,38 +244,54 @@ export default function AdminDashboard() {
             </thead>
             <tbody>
               {responses.map((r) => (
-                <tr key={r.id} className="border-b border-rose-50">
-                  <td className="py-2 px-3 text-rose-600">
-                    {new Date(r.opened_at).toLocaleString("en-IN", {
-                      dateStyle: "short",
-                      timeStyle: "short",
-                    })}
-                  </td>
-                  <td className="py-2 px-3">
-                    {r.website_opened ? "✅" : "❌"}
-                  </td>
-                  <td className="py-2 px-3 text-rose-500 text-xs truncate max-w-[150px]" title={r.device_info}>
-                    {r.device_info || "—"}
-                  </td>
-                  <td className="py-2 px-3 text-rose-500 text-xs">
-                    {r.location || "—"}
-                  </td>
-                  <td className="py-2 px-3 text-center">
-                    {r.letter_opened ? "✅" : "❌"}
-                  </td>
-                  <td className="py-2 px-3 text-center">
-                    {r.slideshow_opened ? "✅" : "❌"}
-                  </td>
-                  <td className="py-2 px-3 text-center font-bold text-rose-600">
-                    {r.no_attempts || 0}
-                  </td>
-                  <td className="py-2 px-3">
-                    {r.forgiven ? "❤️" : "🥺"}
-                  </td>
-                  <td className="py-2 px-3 text-rose-500">
-                    {r.response || "—"}
-                  </td>
-                </tr>
+                <React.Fragment key={r.id}>
+                  <tr className="border-t border-rose-50">
+                    <td className="py-2 px-3 text-rose-600">
+                      {new Date(r.opened_at).toLocaleString("en-IN", {
+                        dateStyle: "short",
+                        timeStyle: "short",
+                      })}
+                    </td>
+                    <td className="py-2 px-3">
+                      {r.website_opened ? "✅" : "❌"}
+                    </td>
+                    <td className="py-2 px-3 text-rose-500 text-xs truncate max-w-[150px]" title={r.device_info}>
+                      {r.device_info || "—"}
+                    </td>
+                    <td className="py-2 px-3 text-rose-500 text-xs">
+                      {r.location || "—"}
+                    </td>
+                    <td className="py-2 px-3 text-center">
+                      {r.letter_opened ? "✅" : "❌"}
+                    </td>
+                    <td className="py-2 px-3 text-center">
+                      {r.slideshow_opened ? "✅" : "❌"}
+                    </td>
+                    <td className="py-2 px-3 text-center font-bold text-rose-600">
+                      {r.no_attempts || 0}
+                    </td>
+                    <td className="py-2 px-3">
+                      {r.forgiven ? "❤️" : "🥺"}
+                    </td>
+                    <td className="py-2 px-3 text-rose-500">
+                      {r.response || "—"}
+                    </td>
+                  </tr>
+                  {r.device_details && Object.keys(r.device_details).length > 0 && (
+                    <tr className="border-b border-rose-50 bg-rose-50/30">
+                      <td colSpan={9} className="py-2 px-3">
+                        <details className="text-xs">
+                          <summary className="cursor-pointer text-rose-700/70 hover:text-rose-700 outline-none">
+                            View Analytics Payload
+                          </summary>
+                          <pre className="mt-2 bg-white p-2 rounded overflow-x-auto text-rose-900/80 border border-rose-100">
+                            {JSON.stringify(r.device_details, null, 2)}
+                          </pre>
+                        </details>
+                      </td>
+                    </tr>
+                  )}
+                </React.Fragment>
               ))}
             </tbody>
           </table>
