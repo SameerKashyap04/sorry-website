@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
-import { recordForgiveness } from "@/lib/supabase";
+import { recordForgiveness, recordAction } from "@/lib/supabase";
 
 interface ForgiveQuestionProps {
   visitId: string | null;
@@ -108,7 +108,8 @@ export default function ForgiveQuestion({ visitId, onNext }: ForgiveQuestionProp
     setCurrentMessage(SAD_MESSAGES[(newCount - 1) % SAD_MESSAGES.length]);
     setCurrentGif(GIFS[(newCount - 1) % GIFS.length]);
     moveNoButton();
-  }, [noAttempts, moveNoButton]);
+    if (visitId) recordAction(visitId, { no_attempts: newCount });
+  }, [noAttempts, moveNoButton, visitId]);
 
   const fireConfetti = () => {
     const duration = 5000;

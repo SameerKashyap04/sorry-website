@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { recordAction } from "@/lib/supabase";
 
 const SLIDES = [
   { src: "/images/mugdha1.jpg", text: "You have such a wonderful smile..." },
@@ -13,10 +14,16 @@ const SLIDES = [
   { src: "/images/mugdha7.jpg", text: "Thank you for being so understanding 💛" },
 ];
 
-export default function FinalSlideshow() {
+interface FinalSlideshowProps {
+  visitId: string | null;
+}
+
+export default function FinalSlideshow({ visitId }: FinalSlideshowProps) {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
+    if (visitId) recordAction(visitId, { slideshow_opened: true });
+    
     const timer = setInterval(() => {
       setIndex((prev) => (prev + 1) % SLIDES.length);
     }, 4500);

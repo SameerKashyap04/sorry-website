@@ -124,7 +124,7 @@ export default function Home() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <LoveLetter onNext={goToForgive} />
+            <LoveLetter visitId={visitId} onNext={goToForgive} />
           </motion.div>
         )}
 
@@ -148,7 +148,7 @@ export default function Home() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <FinalSlideshow />
+            <FinalSlideshow visitId={visitId} />
           </motion.div>
         )}
       </AnimatePresence>

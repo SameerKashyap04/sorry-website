@@ -2,8 +2,10 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { recordAction } from "@/lib/supabase";
 
 interface LoveLetterProps {
+  visitId: string | null;
   onNext: () => void;
 }
 
@@ -35,7 +37,7 @@ const LETTER_LINES = [
   "Sameer :)",
 ];
 
-export default function LoveLetter({ onNext }: LoveLetterProps) {
+export default function LoveLetter({ visitId, onNext }: LoveLetterProps) {
   const [isEnvelopeOpen, setIsEnvelopeOpen] = useState(false);
   const [showLetter, setShowLetter] = useState(false);
   const [visibleLines, setVisibleLines] = useState(0);
@@ -46,7 +48,10 @@ export default function LoveLetter({ onNext }: LoveLetterProps) {
   const handleOpenEnvelope = () => {
     if (isEnvelopeOpen) return;
     setIsEnvelopeOpen(true);
-    setTimeout(() => setShowLetter(true), 1000);
+    setTimeout(() => {
+      setShowLetter(true);
+      if (visitId) recordAction(visitId, { letter_opened: true });
+    }, 1000);
   };
 
   useEffect(() => {

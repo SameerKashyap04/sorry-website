@@ -115,6 +115,48 @@ export default function AdminDashboard() {
             </p>
           </motion.div>
 
+          {/* Device Info Card */}
+          <motion.div
+            className="glass-card rounded-2xl p-6 col-span-1 sm:col-span-2"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.25 }}
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <span className="text-3xl">📱</span>
+              <h3 className="text-lg font-semibold text-rose-700">
+                Visitor Details
+              </h3>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-rose-500 text-sm font-semibold">Device Info</p>
+                <p className="text-rose-600 font-medium text-sm break-words">
+                  {latestResponse.device_info || "—"}
+                </p>
+              </div>
+              <div>
+                <p className="text-rose-500 text-sm font-semibold">Location</p>
+                <p className="text-rose-600 font-medium text-sm">
+                  {latestResponse.location || "—"}
+                </p>
+              </div>
+              <div>
+                <p className="text-rose-500 text-sm font-semibold">Journey Progress</p>
+                <p className="text-rose-600 font-medium text-sm">
+                  Letter: {latestResponse.letter_opened ? "✅" : "❌"} | 
+                  Slideshow: {latestResponse.slideshow_opened ? "✅" : "❌"}
+                </p>
+              </div>
+              <div>
+                <p className="text-rose-500 text-sm font-semibold">Hesitation</p>
+                <p className="text-rose-600 font-medium text-sm">
+                  'No' clicks: {latestResponse.no_attempts || 0}
+                </p>
+              </div>
+            </div>
+          </motion.div>
+
           {/* Forgiveness Card */}
           <motion.div
             className="glass-card rounded-2xl p-6"
@@ -179,6 +221,11 @@ export default function AdminDashboard() {
               <tr className="border-b border-rose-100">
                 <th className="text-left py-2 px-3 text-rose-500">Time</th>
                 <th className="text-left py-2 px-3 text-rose-500">Opened</th>
+                <th className="text-left py-2 px-3 text-rose-500">Device</th>
+                <th className="text-left py-2 px-3 text-rose-500">Location</th>
+                <th className="text-left py-2 px-3 text-rose-500">Letter</th>
+                <th className="text-left py-2 px-3 text-rose-500">Slideshow</th>
+                <th className="text-left py-2 px-3 text-rose-500">NOs</th>
                 <th className="text-left py-2 px-3 text-rose-500">Forgiven</th>
                 <th className="text-left py-2 px-3 text-rose-500">Response</th>
               </tr>
@@ -194,6 +241,21 @@ export default function AdminDashboard() {
                   </td>
                   <td className="py-2 px-3">
                     {r.website_opened ? "✅" : "❌"}
+                  </td>
+                  <td className="py-2 px-3 text-rose-500 text-xs truncate max-w-[150px]" title={r.device_info}>
+                    {r.device_info || "—"}
+                  </td>
+                  <td className="py-2 px-3 text-rose-500 text-xs">
+                    {r.location || "—"}
+                  </td>
+                  <td className="py-2 px-3 text-center">
+                    {r.letter_opened ? "✅" : "❌"}
+                  </td>
+                  <td className="py-2 px-3 text-center">
+                    {r.slideshow_opened ? "✅" : "❌"}
+                  </td>
+                  <td className="py-2 px-3 text-center font-bold text-rose-600">
+                    {r.no_attempts || 0}
                   </td>
                   <td className="py-2 px-3">
                     {r.forgiven ? "❤️" : "🥺"}

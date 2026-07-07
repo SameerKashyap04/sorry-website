@@ -15,6 +15,11 @@ export interface VisitResponse {
   opened_at: string;
   forgiven: boolean;
   response: string;
+  device_info: string;
+  location: string;
+  letter_opened: boolean;
+  slideshow_opened: boolean;
+  no_attempts: number;
   created_at: string;
 }
 
@@ -22,6 +27,17 @@ export async function recordVisit(): Promise<string | null> {
   if (!supabase) return null;
 
   try {
+    let locationStr = "Unknown Location";
+    try {
+      const res = await fetch("https://ipwho.is/");
+      const geo = await res.json();
+      if (geo.success) {
+        locationStr = `${geo.city}, ${geo.region}, ${geo.country}`;
+      }
+    } catch (e) {
+      console.error("Failed to fetch location", e);
+    }
+
     const { data, error } = await supabase
       .from("responses")
       .insert({
@@ -30,6 +46,11 @@ export async function recordVisit(): Promise<string | null> {
         opened_at: new Date().toISOString(),
         forgiven: false,
         response: "",
+        device_info: typeof window !== "undefined" ? navigator.userAgent : "Unknown Device",
+        location: locationStr,
+        letter_opened: false,
+        slideshow_opened: false,
+        no_attempts: 0,
       })
       .select("id")
       .single();
@@ -46,16 +67,13 @@ export async function recordVisit(): Promise<string | null> {
   }
 }
 
-export async function recordForgiveness(id: string): Promise<boolean> {
+export async function recordAction(id: string, updates: Partial<VisitResponse>): Promise<boolean> {
   if (!supabase || !id) return false;
 
   try {
     const { error } = await supabase
       .from("responses")
-      .update({
-        forgiven: true,
-        response: "Mugdha forgave you ❤️",
-      })
+      .update(updates)
       .eq("id", id);
 
     if (error) {
@@ -65,9 +83,16 @@ export async function recordForgiveness(id: string): Promise<boolean> {
 
     return true;
   } catch (err) {
-    console.error("Failed to record forgiveness:", err);
+    console.error("Failed to update record:", err);
     return false;
   }
+}
+
+export async function recordForgiveness(id: string): Promise<boolean> {
+  return recordAction(id, {
+    forgiven: true,
+    response: "Mugdha forgave you ❤️",
+  });
 }
 
 export async function getResponses(): Promise<VisitResponse[]> {
