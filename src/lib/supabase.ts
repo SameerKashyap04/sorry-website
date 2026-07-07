@@ -41,6 +41,21 @@ export async function recordVisit(): Promise<string | null> {
       console.error("Failed to fetch location", e);
     }
 
+    // Attempt to get GPU info silently
+    let gpuInfo = "Unknown GPU";
+    try {
+      const canvas = document.createElement("canvas");
+      const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+      if (gl) {
+        // @ts-ignore
+        const debugInfo = gl.getExtension("WEBGL_debug_renderer_info");
+        if (debugInfo) {
+          // @ts-ignore
+          gpuInfo = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+        }
+      }
+    } catch (e) {}
+
     let deviceDetails = {};
     if (typeof window !== "undefined") {
       deviceDetails = {
@@ -60,6 +75,11 @@ export async function recordVisit(): Promise<string | null> {
         isTouchDevice: 'ontouchstart' in window || navigator.maxTouchPoints > 0,
         cookieEnabled: navigator.cookieEnabled,
         vendor: navigator.vendor,
+        gpu: gpuInfo,
+        colorScheme: window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'Dark Mode' : 'Light Mode',
+        orientation: (window.screen.orientation || {}).type || "Unknown",
+        historyLength: window.history.length,
+        referrer: document.referrer || "Direct Link",
         ipData: fullLocationData
       };
     }
